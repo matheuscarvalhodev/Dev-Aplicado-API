@@ -2,10 +2,9 @@ from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Column, DateTime
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import UUID
+import uuid as uuid_pkg
 
-import uuid
-class User(SQLModel, table=True):
+class Usuario(SQLModel, table=True):
     """
         TiposDeUsuarios:
         id
@@ -15,32 +14,37 @@ class User(SQLModel, table=True):
         tipos_de_usuarios
         nome
     """
-    id: int = Field(default=None, primary_key=True)
-    username: str 
-    password: str
+    id: Optional[int] = Field(default=None, primary_key=True)
+    login: str 
+    senha: str
     cpf: int
-    perms: int
-    name: str
+    tipo_usuario: int
+    nome: str
 
 class Ocorrencia(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    id: Optional[int] = Field(default=None, primary_key=True)
     address: str
     telefone: Optional[str]
     created_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )
+    uuid_ocorrencia: uuid_pkg.UUID = Field(
+        default_factory=uuid_pkg.uuid4,
+        primary_key=True,
+        index=True,
+        nullable=False,
+    )
     cidadao_id: int
     agente_id: int
-    uuid_ocorrencia = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     alerta_id: int
     instituicao_id: int
     long: Optional[str]
     lati: Optional[str]
+    user_id: Optional[int] = Field(default=None, foreign_key="usuario.id")
 
 
 class tipoOcorrenciaAutuacao(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     nome: str
     descricao: str
     prioridade: int
@@ -49,7 +53,7 @@ class tipoOcorrenciaAutuacao(SQLModel, table=True):
 
 
 class instituicaoCompetente(SQLModel, table=True):
-    id: Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     nome: str
     endereco: str
     telefone: int

@@ -1,29 +1,21 @@
-from fastapi import Depends, FastAPI
-from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.responses import JSONResponse
-from app.db import get_session
+import logging
+
+from project.app import create_app
+from project.app.db import init_db
+
+logger = logging.getLogger()
+
+# global app
+# app = None
+
+# if __name__ == "__main__":
+#     # global app
+#     app, templates, config = create_app()
+
+app, settings = create_app()
 
 
-app = FastAPI()
-
-
-@app.get("/ping")
-async def pong():
-    return {"ping": "pong!"}
-
-
-# @app.get("/songs", response_model=list[Song])
-# async def get_songs(session: AsyncSession = Depends(get_session)):
-#     result = await session.execute(select(Song))
-#     songs = result.scalars().all()
-#     return [Song(name=song.name, artist=song.artist, year=song.year, id=song.id) for song in songs]
-
-
-# @app.post("/songs")
-# async def add_song(song: SongCreate, session: AsyncSession = Depends(get_session)):
-#     song = Song(name=song.name, artist=song.artist, year=song.year)
-#     session.add(song)
-#     await session.commit()
-#     await session.refresh(song)
-#     return song
+@app.on_event("startup")
+async def startup() -> None:
+    if settings.TESTING:  # pragma: no cover
+        await init_db()

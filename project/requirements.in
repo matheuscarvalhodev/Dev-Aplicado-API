@@ -1,0 +1,24 @@
+# FastAPI basic dependencies
+fastapi
+uvicorn
+
+# templating engine
+jinja2
+
+# form rendering and validation
+wtforms>3
+
+# support for forms in FastAPI
+python-multipart
+
+# database
+alembic
+sqlmodel
+asyncpg
+
+# session middleware
+itsdangerous
+
+# generating jupyter notebooks
+nbformat
+nbconvert

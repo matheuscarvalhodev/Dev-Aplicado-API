@@ -4,16 +4,15 @@ services:
 
   web:
     build: ./project
-    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    command: uvicorn project.app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
-      - ./project:/usr/src/app
+      - ./project:/home/rest/project
     ports:
       - 8004:8000
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/foo
-    depends_on:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/db_dev
+    depends_on: 
       - db
-
   db:
     image: postgres:13.4
     expose:
@@ -21,4 +20,12 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=foo
+      - POSTGRES_DB=db_dev
+  redis-db:
+    image: bitnami/redis
+    expose:
+      - 6379
+    ports: # TODO: remove for deployment
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
