@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: uvicorn test",
+            "module": "uvicorn",
+            "type": "python",
+            "request": "launch",
+            "args": [
+                "project.app.main:app",
+                "--reload",
+                "--port",
+                "8000"
+            ],
+            "env": {
+                "APP_SETTINGS": "DevelopmentSettings",
+                "DATABASE_URL": "postgresql+asyncpg://postgres:postgres@localhost:5432/db_dev",
+            }
+        },
+        {
+            "name": "Python: uvicorn development",
+            "module": "uvicorn",
+            "type": "python",
+            "request": "launch",
+            "args": [
+                "project.app.main:app",
+                "--reload",
+                "--port",
+                "8000"
+            ],
+            "env": {
+                "APP_SETTINGS": "TestingSettings",
+            }
+        },
+    ]
+}
