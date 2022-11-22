@@ -6,19 +6,19 @@ import uuid as uuid_pkg
 
 class Usuario(SQLModel, table=True):
     """
-        TiposDeUsuarios:
-        id
-        login
-        senha
-        cpf
-        tipos_de_usuarios
+        args:
+        id,
+        login,
+        senha,
+        cpf,
+        tipo_usuario,
         nome
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     login: str 
     senha: str
-    cpf: int
-    tipo_usuario: int
+    cpf: str
+    tipo_usuario: str
     nome: str
 
 class Ocorrencia(SQLModel, table=True):

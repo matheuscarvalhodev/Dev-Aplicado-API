@@ -48,15 +48,8 @@ async def create_data(session: AsyncSession) -> None:
     """
     Generate random data for tests.
     """
-    # for i in range(10):
-    #     u = Usuario(
-    #     login=f"login{i}",
-    #     senha=f"senha{i}",      
-    #     cpf=9999999999+(i+1),
-    #     tipos_de_usuarios=choice(["cidadao", "funcionario", "agente"]),
-    #     nome=f"Nome {i+1}",
-    #     )
-       
-    #     session.add(u)
+    for i in range(10):
+        u = Usuario(login=f"login{i+1}", senha=f"senha{i+1}", cpf=f"{99999999990+i}", tipo_usuario=choice(["cidadao", "funcionario", "administrador"]), nome=f"Nome {i+1}")
+        session.add(u)
 
     await session.commit()
