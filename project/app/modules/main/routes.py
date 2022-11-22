@@ -15,4 +15,4 @@ router = APIRouter()
 
 @router.get("/")
 async def main(request: Request) -> Response:
-    return JSONResponse(content={"hello": "world"})
+    return JSONResponse(content={"main": "page"})
