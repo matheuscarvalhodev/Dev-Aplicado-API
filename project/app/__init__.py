@@ -1,5 +1,4 @@
 import logging
-
 # from logging.config import dictConfig
 from typing import Optional, Tuple
 
@@ -8,9 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware import Middleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from project.app.modules.main.routes import (
-    router as _main,  # underscore to avoid shadowing
-)
+from project.app.modules.main.routes import \
+    router as _main  # underscore to avoid shadowing
 
 from .settings import BaseSettings, get_settings
 
@@ -63,10 +61,5 @@ def create_app(
     # create a new app
     app = FastAPI(middleware=middleware)
 
-    # mounting static files
-    app.mount("/static", StaticFiles(directory="project/app/static"), name="static")
-
-    # include external routers
-    app.include_router(_main)
 
     return app, settings
