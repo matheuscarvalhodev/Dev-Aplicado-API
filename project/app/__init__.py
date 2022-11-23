@@ -9,6 +9,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from project.app.modules.main.routes import \
     router as _main  # underscore to avoid shadowing
+from project.app.modules.usuarios.routes import router as users
 
 from .settings import BaseSettings, get_settings
 
@@ -61,5 +62,9 @@ def create_app(
     # create a new app
     app = FastAPI(middleware=middleware)
 
+
+    # include external routers
+    app.include_router(_main)
+    app.include_router(users)
 
     return app, settings

@@ -1,13 +1,14 @@
-from typing import Optional
-from datetime import datetime
-from sqlmodel import SQLModel, Field, Column, DateTime
-from sqlalchemy.sql import func
 import uuid as uuid_pkg
+from datetime import datetime
+from typing import Optional
+
+from sqlalchemy.sql import func
+from sqlmodel import Column, DateTime, Field, SQLModel
+
 
 class Usuario(SQLModel, table=True):
     """
         args:
-        id,
         login,
         senha,
         cpf,
