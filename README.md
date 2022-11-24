@@ -10,15 +10,8 @@ Check out the [post](https://testdriven.io/blog/fastapi-sqlmodel/).
 
 ```sh
 $ docker-compose up -d --build
-$ docker-compose exec web alembic upgrade head
 ```
 
-Sanity check: [http://localhost:8004/ping](http://localhost:8004/ping)
+Sanity check: [http://localhost:8000/ping](http://localhost:8000/ping)
 
-Add a song:
 
-```sh
-$ curl -d '{"name":"Midnight Fit", "artist":"Mogwai", "year":"2021"}' -H "Content-Type: application/json" -X POST http://localhost:8004/songs
-```
-
-Get all songs: [http://localhost:8004/songs](http://localhost:8004/songs)
