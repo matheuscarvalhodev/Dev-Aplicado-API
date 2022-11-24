@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.templating import _TemplateResponse
 
 from project.app.settings import settings
@@ -15,4 +15,4 @@ router = APIRouter()
 
 @router.get("/")
 async def main(request: Request) -> Response:
-    return JSONResponse(content={"main": "page"})
+    return JSONResponse(content={"ping": "pong"})

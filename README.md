@@ -12,6 +12,6 @@ Check out the [post](https://testdriven.io/blog/fastapi-sqlmodel/).
 $ docker-compose up -d --build
 ```
 
-Sanity check: [http://localhost:8000/ping](http://localhost:8000/ping)
+Sanity check: [http://localhost:8000/](http://localhost:8000/)
 
 
