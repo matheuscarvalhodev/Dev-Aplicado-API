@@ -22,3 +22,9 @@ itsdangerous
 # generating jupyter notebooks
 nbformat
 nbconvert
+
+# https://fastapi.tiangolo.com/pt/tutorial/security/oauth2-jwt/#__tabbed_1_1 
+passlib
+passlib[bcrypt]
+python-jose
+python-jose[cryptography]

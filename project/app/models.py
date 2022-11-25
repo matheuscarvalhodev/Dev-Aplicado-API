@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.sql import func
-from sqlmodel import Column, DateTime, Field, SQLModel
+from sqlmodel import Column, DateTime, Field, SQLModel, String
 
 
 class Usuario(SQLModel, table=True):
@@ -59,3 +59,8 @@ class instituicaoCompetente(SQLModel, table=True):
     endereco: str
     telefone: int
     email: str
+
+class loginData(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    login_user: str = Field(sa_column=Column('login_user', String, unique=True))
+    pwd_user = str
