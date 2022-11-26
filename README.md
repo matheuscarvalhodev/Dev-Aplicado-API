@@ -14,4 +14,5 @@ $ docker-compose up -d --build
 
 Sanity check: [http://localhost:8000/](http://localhost:8000/)
 
-
+## OpenAPI Docs
+Swagger App: [http://localhost:8000/docs](http://localhost:8000/docs)
