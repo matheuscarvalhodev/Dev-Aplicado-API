@@ -79,4 +79,4 @@ class LoginSucesso(SQLModel):
 class Previsao(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     data: date
-    nivel_agua: condecimal(max_digits=5, decimal_places=2) = Field(default=0)
+    nivel_agua: condecimal(max_digits=5, decimal_places=1) = Field(default=0)
