@@ -23,6 +23,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=db_dev
+    volumes: 
+      - .postgres_data:/var/lib/postgresql/data
   redis-db:
     image: bitnami/redis
     expose:
@@ -31,3 +33,6 @@ services:
       - 6379:6379
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+        - .redis_data:/data
+      # https://geshan.com.np/blog/2022/01/redis-docker/

@@ -13,16 +13,7 @@ from project.app.db import get_session
 from project.app.models import Usuario
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='token')
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+
 
 async def obter_usuario_logado(token: str = Depends(oauth2_schema),
                          session: AsyncSession = Depends(get_session)):
@@ -40,7 +31,6 @@ async def obter_usuario_logado(token: str = Depends(oauth2_schema),
     _query = select(Usuario).filter_by(username=_username)
     _result = await session.execute(_query)
     is_usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    print(bcolors.WARNING, is_usuario)
     if not is_usuario:
         raise exception
 
