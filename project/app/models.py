@@ -6,22 +6,6 @@ from sqlalchemy.sql import func
 from sqlmodel import Column, DateTime, Field, SQLModel, String
 
 
-class Usuario(SQLModel, table=True):
-    """
-        args:
-        login,
-        senha,
-        cpf,
-        tipo_usuario,
-        nome
-    """
-    id: Optional[int] = Field(default=None, primary_key=True)
-    login: str 
-    senha: str
-    cpf: str
-    tipo_usuario: str
-    nome: str
-
 class Ocorrencia(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     address: str
@@ -60,7 +44,33 @@ class instituicaoCompetente(SQLModel, table=True):
     telefone: int
     email: str
 
-class loginData(SQLModel, table=True):
+class Usuario(SQLModel, table=True):
+    """
+    args*:
+    username
+    password
+    cpf
+    tipo_usuario
+    nome
+    ('nattan', '12312312312', '$2b$12$izCZTtzftVB/k1GU1UX9muQlpx4oia102AuGSf6cf0vJNNlrJ4UcO', 0, 'Nattan Lobato')
+    """
     id: Optional[int] = Field(default=None, primary_key=True)
-    login_user: str = Field(sa_column=Column('login_user', String, unique=True))
-    pwd_user = str
+    username: str = Field(index=True, sa_column=Column("username", String, unique=True))
+    password: str
+    cpf: str = Field(sa_column=Column("cpf", String, unique=True), index=True)
+    tipo_usuario: Optional[int] = Field(default=0)
+    nome: str
+
+
+class UsuarioSimples(SQLModel):
+    username: str
+    nome: str
+
+
+class LoginData(SQLModel):
+    username: str
+    password: str
+
+class LoginSucesso(SQLModel):
+    usuario: UsuarioSimples
+    access_token: str

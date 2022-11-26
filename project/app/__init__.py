@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware import Middleware
 from starlette.middleware.sessions import SessionMiddleware
 
+from project.app.modules.auth.routes import router as auth
 from project.app.modules.main.routes import \
     router as _main  # underscore to avoid shadowing
 from project.app.modules.usuarios.routes import router as users
@@ -66,5 +67,6 @@ def create_app(
     # include external routers
     app.include_router(_main)
     app.include_router(users)
+    app.include_router(auth)
 
     return app, settings
