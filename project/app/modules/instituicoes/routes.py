@@ -18,7 +18,6 @@ router = APIRouter(prefix="/instituicoes")
 
 @router.get("", response_model=List[InstituicaoCompetente])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
-    print(user)
     _query = select(InstituicaoCompetente).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _instituicao = _result.scalars().all()
