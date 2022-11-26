@@ -8,7 +8,7 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth import hash_provider, token_provider
 from project.app.db import get_session
-from project.app.models import Usuario
+from project.app.models import Previsao, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -20,8 +20,8 @@ router = APIRouter(prefix="/usuarios")
 async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(Usuario).offset(offset).limit(limit)
     _result = await session.execute(_query)
-    courses = _result.scalars().all()
-    return courses
+    _usuario = _result.scalars().all()
+    return _usuario
 
 @router.get("/{usuario_id}", response_model=Usuario)
 async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
@@ -74,3 +74,4 @@ async def delete(usuario_id: int, session: AsyncSession = Depends(get_session) )
     await session.delete(_usuario)
     await session.commit()
     return JSONResponse({"message": f"{usuario_id}"})
+

@@ -1,2 +1,6 @@
 __pycache__
 env
+
+# cache db
+.postgres_data/
+.redis_data/
