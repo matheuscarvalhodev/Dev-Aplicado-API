@@ -20,7 +20,7 @@ router = APIRouter(prefix="/previsao")
 async def list(request: Request, session: AsyncSession = Depends(get_session)
     # , offset: int = 0, limit: int = Query(default=100, lte=100)
     ) -> Response:
-    _query = select(Previsao).order_by(Previsao.id.desc()).one() #.offset(offset).limit(limit)
+    _query = select(Previsao).order_by(desc(Previsao.id)).limit(1) #.offset(offset).limit(limit)
     _result = await session.execute(_query)
-    _previsao = _result.scalars().all()
+    _previsao: Optional(Previsao) = _result.scalar_one_or_none()
     return _previsao

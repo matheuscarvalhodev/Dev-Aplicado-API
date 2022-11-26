@@ -80,6 +80,7 @@ class DadosHistoricos(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     data: date
     nivel_agua: condecimal(max_digits=5, decimal_places=1) = Field(default=0)
+
 class Previsao(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nivel_agua: condecimal(max_digits=5, decimal_places=1) = Field(default=0)
