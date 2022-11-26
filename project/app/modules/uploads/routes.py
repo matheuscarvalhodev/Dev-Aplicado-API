@@ -20,11 +20,11 @@ from project.app.utils.generate import namefile
 
 router = APIRouter(prefix="/uploads")
 
-@router.post("/file")
+@router.post("/file", tags=["Arquivos"])
 async def create_upload_file(file: UploadFile = File(...)):
     print(namefile())
     return {"filename": file.filename}
 
-@router.post("/files")
+@router.post("/files", tags=["Arquivos"])
 async def create_upload_files(files: List[UploadFile] = File(description="Multiple files as UploadFile"),):
     return {"filenames": [file.filename for file in files]}

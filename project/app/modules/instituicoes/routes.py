@@ -16,14 +16,14 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/instituicoes")
 
 
-@router.get("", response_model=List[InstituicaoCompetente])
+@router.get("", response_model=List[InstituicaoCompetente], tags=["Instituição"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(InstituicaoCompetente).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _instituicao = _result.scalars().all()
     return _instituicao
 
-@router.get("/{instituicao_id}", response_model=InstituicaoCompetente)
+@router.get("/{instituicao_id}", response_model=InstituicaoCompetente, tags=["Instituição"])
 async def by_id(request: Request, instituicao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
@@ -32,7 +32,7 @@ async def by_id(request: Request, instituicao_id: int, user: Usuario=Depends(obt
         raise HTTPException(status_code=404, detail="Instituicao not found")
     return _instituicao
 
-@router.post("/", response_model=InstituicaoCompetente)
+@router.post("/", response_model=InstituicaoCompetente, tags=["Instituição"])
 async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), instituicao: InstituicaoCompetente) -> Response:
     _instituicao = InstituicaoCompetente(
         name=instituicao.name,
@@ -45,7 +45,7 @@ async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncS
     await session.refresh(_instituicao)
     return _instituicao
 
-@router.post("/{instituicao_id}", response_model=InstituicaoCompetente)
+@router.post("/{instituicao_id}", response_model=InstituicaoCompetente, tags=["Instituição"])
 async def update(instituicao_id: int,instituicao: InstituicaoCompetente, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
@@ -61,7 +61,7 @@ async def update(instituicao_id: int,instituicao: InstituicaoCompetente, user: U
     await session.refresh(_instituicao)
     return _instituicao
 
-@router.delete("/{instituicao_id}")
+@router.delete("/{instituicao_id}", tags=["Instituição"])
 async def delete(instituicao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
