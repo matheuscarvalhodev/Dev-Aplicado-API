@@ -12,7 +12,7 @@ from project.app.auth import token_provider
 from project.app.db import get_session
 from project.app.models import Usuario
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
 async def obter_usuario_logado(token: str = Depends(oauth2_schema),

@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
@@ -49,9 +50,9 @@ async def signup(usuario: Usuario, session: AsyncSession = Depends(get_session))
 
 @router.post("/token", tags=["Autorização"])
 async def login(login_data: LoginData, session: AsyncSession = Depends(get_session)) -> Response:
-    _username = login_data.username
-    _password = login_data.password
-
+    _username = login_data.username 
+    _password = login_data.password 
+    
     _query = select(Usuario).filter_by(username=_username)
     _result = await session.execute(_query)
     is_username: Optional[Usuario] = _result.scalar_one_or_none()

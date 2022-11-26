@@ -13,10 +13,10 @@ class Ocorrencia(SQLModel, table=True):
     address: str [NN]
     name: str [OP]
     tel: str [OP]
-    uuid_ocorrencia: uuid 
+    uuid_ocorrencia: uuid [OP]
     long: str [OP]
     lati: str [OP]
-    created_at: datetime 
+    created_at: datetime [OP]
     agente_id: int [FK]
     alerta_id: int [FK] 
     instituicao_id: int [FK]
@@ -30,7 +30,6 @@ class Ocorrencia(SQLModel, table=True):
         default_factory=uuid_pkg.uuid4,
         primary_key=True,
         index=True,
-        nullable=False,
     )
     long: Optional[str]
     lati: Optional[str]
@@ -39,7 +38,7 @@ class Ocorrencia(SQLModel, table=True):
     )
     agente_id: Optional[int] = Field(default=None, foreign_key="usuario.id")
     alerta_id: Optional[int] = Field(default=None, foreign_key="notificacaoresposta.id")
-    instituicao_id: Optional[int] = Field(default=None, foreign_key="instituicaocompetente.id")
+    instituicao_id: int = Field(default=None, foreign_key="instituicaocompetente.id")
     usuario_id: Optional[int] = Field(default=None, foreign_key="usuario.id")
 
 
