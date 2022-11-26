@@ -6,18 +6,19 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
 
-from project.app.auth import hash_provider, token_provider
+from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
 from project.app.models import InstituicaoCompetente, Previsao, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
 
-router = APIRouter(prefix="/instituicao")
+router = APIRouter(prefix="/instituicoes")
 
 
-@router.get("/", response_model=List[InstituicaoCompetente])
-async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
+@router.get("", response_model=List[InstituicaoCompetente])
+async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
+    print(user)
     _query = select(InstituicaoCompetente).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _instituicao = _result.scalars().all()
