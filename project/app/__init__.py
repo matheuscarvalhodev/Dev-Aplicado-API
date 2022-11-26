@@ -8,6 +8,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.sessions import SessionMiddleware
 
 from project.app.modules.auth.routes import router as auth
+from project.app.modules.instituicoes.routes import router as instituicoes
 from project.app.modules.main.routes import \
     router as _main  # underscore to avoid shadowing
 from project.app.modules.notificacoes.routes import router as notificacoes
@@ -108,5 +109,6 @@ def create_app(
     app.include_router(previsao)
     app.include_router(ocorrencias)
     app.include_router(notificacoes)
+    app.include_router(instituicoes)
 
     return app, settings
