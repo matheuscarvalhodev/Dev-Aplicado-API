@@ -29,6 +29,16 @@ class Ocorrencia(SQLModel, table=True):
     usuario_id: Optional[int] = Field(default=None, foreign_key="usuario.id")
 
 
+class NotificacaoResposta(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    status: str
+    created_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
+    updated_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=True, server_default=func.now(), onupdate=datetime.now)
+    )
+
 
 class TipoOcorrenciaAutuacao(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

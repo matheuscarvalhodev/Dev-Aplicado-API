@@ -8,7 +8,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
 from project.app.auth import hash_provider
-from project.app.models import DadosHistoricos, Previsao, Usuario
+from project.app.models import (DadosHistoricos, NotificacaoResposta, Previsao,
+                                Usuario)
 from project.app.settings import settings
 
 global engine  # pylint: disable=global-at-module-level
@@ -63,6 +64,7 @@ async def create_data(session: AsyncSession) -> None:
         session.add(dh)
         p = Previsao(nivel_agua=n_agua)
         session.add(p)
-
+        no = NotificacaoResposta(status=f"flinstons - {i+1}")
+        session.add(no)
     
     await session.commit()

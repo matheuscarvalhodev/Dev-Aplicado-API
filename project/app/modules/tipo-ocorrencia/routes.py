@@ -6,9 +6,8 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
 
-from project.app.auth import hash_provider, token_provider
 from project.app.db import get_session
-from project.app.models import Previsao, Usuario
+from project.app.models import TipoOcorrenciaAutuacao
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -16,62 +15,64 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/tipo-ocorrencia")
 
 
-@router.get("/", response_model=List[Usuario])
+@router.get("/", response_model=List[TipoOcorrenciaAutuacao])
 async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
-    _query = select(Usuario).offset(offset).limit(limit)
+    _query = select(TipoOcorrenciaAutuacao).offset(offset).limit(limit)
     _result = await session.execute(_query)
-    _usuario = _result.scalars().all()
-    return _usuario
+    _ocorrencia_autuacao = _result.scalars().all()
+    return _ocorrencia_autuacao
 
-@router.get("/{usuario_id}", response_model=Usuario)
-async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+@router.get("/{tipoOcorrenciaId}", response_model=TipoOcorrenciaAutuacao)
+async def by_id(request: Request, tipoOcorrenciaId: int, session: AsyncSession = Depends(get_session)) -> Response:
+    _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipoOcorrenciaId)
     _result = await session.execute(_query)
-    usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
-    return usuario
+    _tipo_ocorrencia_id: Optional[TipoOcorrenciaAutuacao] = _result.scalar_one_or_none()
+    if not _tipo_ocorrencia_id:
+        raise HTTPException(status_code=404, detail="TipoOcorrenciaAutuacao not found")
+    return _tipo_ocorrencia_id
 
-@router.post("/", response_model=Usuario)
-async def create(*, session: AsyncSession = Depends(get_session), usuario: Usuario) -> Response:
-    usuario = Usuario(
-        login= usuario.login, 
-        senha= usuario.senha, 
-        cpf= usuario.cpf, 
-        tipo_usuario= usuario.tipo_usuario, 
-        nome= usuario.nome
+@router.post("/", response_model=TipoOcorrenciaAutuacao)
+async def create(*, session: AsyncSession = Depends(get_session), tipo_ocorrencia: TipoOcorrenciaAutuacao) -> Response:
+    _tipo_ocorrencia = TipoOcorrenciaAutuacao(
+        nome= tipo_ocorrencia.nome,
+        descricao= tipo_ocorrencia.descricao,
+        prioridade= tipo_ocorrencia.prioridade,
+        tipo= tipo_ocorrencia.tipo,
+        instituicao_id= tipo_ocorrencia.instituicao_id,
         )
-    session.add(usuario)
+    session.add(_tipo_ocorrencia)
     await session.commit()
-    await session.refresh(usuario)
-    return usuario
+    await session.refresh(_tipo_ocorrencia)
+    return _tipo_ocorrencia
 
-@router.post("/{usuario_id}", response_model=Usuario)
-async def update(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends(get_session) ) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+@router.post("/{tipo_ocorrencia_id}", response_model=TipoOcorrenciaAutuacao)
+async def update(tipo_ocorrencia_id: int,tipo_ocorrencia: TipoOcorrenciaAutuacao, session: AsyncSession = Depends(get_session) ) -> Response:
+    _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipo_ocorrencia_id)
     _result = await session.execute(_query)
-    _usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not _usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
-    _usuario.login =usuario.login 
-    _usuario.senha =usuario.senha 
-    _usuario.cpf =usuario.cpf 
-    _usuario.tipo_usuario =usuario.tipo_usuario
-    _usuario.nome =usuario.nome
-    session.add(_usuario)
-    await session.commit()
-    await session.refresh(_usuario)
-    return _usuario
+    _tipo_ocorrencia: Optional[TipoOcorrenciaAutuacao] = _result.scalar_one_or_none()
+    
+    if not _tipo_ocorrencia:
+        raise HTTPException(status_code=404, detail="TipoOcorrenciaAutuacao not found")
+    
+    _tipo_ocorrencia.nome = tipo_ocorrencia.nome
+    _tipo_ocorrencia.descricao = tipo_ocorrencia.descricao
+    _tipo_ocorrencia.prioridade = tipo_ocorrencia.prioridade
+    _tipo_ocorrencia.tipo = tipo_ocorrencia.tipo
+    _tipo_ocorrencia.instituicao_id = tipo_ocorrencia.instituicao_id
 
-@router.delete("/{usuario_id}")
-async def delete(usuario_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+    session.add(_tipo_ocorrencia)
+    await session.commit()
+    await session.refresh(_tipo_ocorrencia)
+    return _tipo_ocorrencia
+
+@router.delete("/{tipo_ocorrencia_id}")
+async def delete(tipo_ocorrencia_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+    _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipo_ocorrencia_id)
     _result = await session.execute(_query)
-    _usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not _usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
-
-    await session.delete(_usuario)
+    _tipo_ocorrencia: Optional[TipoOcorrenciaAutuacao] = _result.scalar_one_or_none()
+    if not _tipo_ocorrencia:
+        raise HTTPException(status_code=404, detail="TipoOcorrenciaAutuacao not found")
+    await session.delete(_tipo_ocorrencia)
     await session.commit()
-    return JSONResponse({"message": f"{usuario_id}"})
+    return JSONResponse({"message": f"{tipo_ocorrencia_id}"})
 

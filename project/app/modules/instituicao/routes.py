@@ -8,7 +8,7 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth import hash_provider, token_provider
 from project.app.db import get_session
-from project.app.models import Previsao, Usuario
+from project.app.models import InstituicaoCompetente, Previsao, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -16,62 +16,60 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/instituicao")
 
 
-@router.get("/", response_model=List[Usuario])
+@router.get("/", response_model=List[InstituicaoCompetente])
 async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
-    _query = select(Usuario).offset(offset).limit(limit)
+    _query = select(InstituicaoCompetente).offset(offset).limit(limit)
     _result = await session.execute(_query)
-    _usuario = _result.scalars().all()
-    return _usuario
+    _instituicao = _result.scalars().all()
+    return _instituicao
 
-@router.get("/{usuario_id}", response_model=Usuario)
-async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+@router.get("/{instituicao_id}", response_model=InstituicaoCompetente)
+async def by_id(request: Request, instituicao_id: int, session: AsyncSession = Depends(get_session)) -> Response:
+    _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
-    usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
-    return usuario
+    _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()
+    if not _instituicao:
+        raise HTTPException(status_code=404, detail="Instituicao not found")
+    return _instituicao
 
-@router.post("/", response_model=Usuario)
-async def create(*, session: AsyncSession = Depends(get_session), usuario: Usuario) -> Response:
-    usuario = Usuario(
-        login= usuario.login, 
-        senha= usuario.senha, 
-        cpf= usuario.cpf, 
-        tipo_usuario= usuario.tipo_usuario, 
-        nome= usuario.nome
+@router.post("/", response_model=InstituicaoCompetente)
+async def create(*, session: AsyncSession = Depends(get_session), instituicao: InstituicaoCompetente) -> Response:
+    _instituicao = InstituicaoCompetente(
+        name=instituicao.name,
+        address=instituicao.address,
+        tel=instituicao.tel,
+        email=instituicao.email
         )
-    session.add(usuario)
+    session.add(_instituicao)
     await session.commit()
-    await session.refresh(usuario)
-    return usuario
+    await session.refresh(_instituicao)
+    return _instituicao
 
-@router.post("/{usuario_id}", response_model=Usuario)
-async def update(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends(get_session) ) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+@router.post("/{instituicao_id}", response_model=InstituicaoCompetente)
+async def update(instituicao_id: int,instituicao: InstituicaoCompetente, session: AsyncSession = Depends(get_session) ) -> Response:
+    _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
-    _usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not _usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
-    _usuario.login =usuario.login 
-    _usuario.senha =usuario.senha 
-    _usuario.cpf =usuario.cpf 
-    _usuario.tipo_usuario =usuario.tipo_usuario
-    _usuario.nome =usuario.nome
-    session.add(_usuario)
+    _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()
+    if not _instituicao:
+        raise HTTPException(status_code=404, detail="Instituicao not found")
+    _instituicao.name = instituicao.name
+    _instituicao.address = instituicao.address
+    _instituicao.tel = instituicao.tel
+    _instituicao.email = instituicao.email
+    session.add(_instituicao)
     await session.commit()
-    await session.refresh(_usuario)
-    return _usuario
+    await session.refresh(_instituicao)
+    return _instituicao
 
-@router.delete("/{usuario_id}")
-async def delete(usuario_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
-    _query = select(Usuario).filter_by(id=usuario_id)
+@router.delete("/{instituicao_id}")
+async def delete(instituicao_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+    _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
-    _usuario: Optional[Usuario] = _result.scalar_one_or_none()
-    if not _usuario:
-        raise HTTPException(status_code=404, detail="Usuario not found")
+    _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()
+    if not _instituicao:
+        raise HTTPException(status_code=404, detail="Instituicao not found")
 
-    await session.delete(_usuario)
+    await session.delete(_instituicao)
     await session.commit()
-    return JSONResponse({"message": f"{usuario_id}"})
+    return JSONResponse({"deleted": f"{instituicao_id}"})
 
