@@ -26,7 +26,7 @@ class Ocorrencia(SQLModel, table=True):
     address: str
     name: Optional[str] =  Field(default="anon")
     tel: Optional[str]
-    uuid_ocorrencia: uuid_pkg.UUID = Field(
+    uuid_ocorrencia: Optional[uuid_pkg.UUID] = Field(
         default_factory=uuid_pkg.uuid4,
         primary_key=True,
         index=True,
