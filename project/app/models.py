@@ -1,7 +1,8 @@
 import uuid as uuid_pkg
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 
+from pydantic import condecimal
 from sqlalchemy.sql import func
 from sqlmodel import Column, DateTime, Field, SQLModel, String
 
@@ -74,3 +75,8 @@ class LoginData(SQLModel):
 class LoginSucesso(SQLModel):
     usuario: UsuarioSimples
     access_token: str
+
+class Previsao(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    data: date
+    nivel_agua: condecimal(max_digits=5, decimal_places=2) = Field(default=0)

@@ -8,7 +8,7 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth import hash_provider, token_provider
 from project.app.db import get_session
-from project.app.models import Usuario
+from project.app.models import Previsao, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -74,3 +74,4 @@ async def delete(usuario_id: int, session: AsyncSession = Depends(get_session) )
     await session.delete(_usuario)
     await session.commit()
     return JSONResponse({"message": f"{usuario_id}"})
+

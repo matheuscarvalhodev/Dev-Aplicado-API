@@ -1,5 +1,5 @@
 from datetime import date
-from random import choice, randint
+from random import choice, randint, uniform
 from typing import AsyncGenerator, Optional
 
 from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
 from project.app.auth import hash_provider
-from project.app.models import Usuario
+from project.app.models import Previsao, Usuario
 from project.app.settings import settings
 
 global engine  # pylint: disable=global-at-module-level
@@ -56,5 +56,10 @@ async def create_data(session: AsyncSession) -> None:
         # passh = hash_provider.gerar_hash(f"senha{i+1}")
         # ld = loginData(login_user=f"user{i+1}", pwd_user=passh)
         # session.add(ld)
-
+    for i in range(5):
+        n_agua = round(uniform(33.3, 66.6), 1)
+        data_random = date(2018, 6, i+1)
+        p = Previsao(data=data_random, nivel_agua=n_agua)
+        session.add(p)
+    
     await session.commit()
