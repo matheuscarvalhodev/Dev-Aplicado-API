@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -6,6 +6,7 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
 
+from project.app.auth import hash_provider, token_provider
 from project.app.db import get_session
 from project.app.models import Usuario
 from project.app.settings import settings
@@ -15,15 +16,15 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/usuarios")
 
 
-@router.get("/", response_model=list[Usuario])
-async def main(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
+@router.get("/", response_model=List[Usuario])
+async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(Usuario).offset(offset).limit(limit)
     _result = await session.execute(_query)
     courses = _result.scalars().all()
     return courses
 
 @router.get("/{usuario_id}", response_model=Usuario)
-async def main(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
+async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(Usuario).filter_by(id=usuario_id)
     _result = await session.execute(_query)
     usuario: Optional[Usuario] = _result.scalar_one_or_none()
@@ -32,7 +33,7 @@ async def main(request: Request, usuario_id: int, session: AsyncSession = Depend
     return usuario
 
 @router.post("/", response_model=Usuario)
-async def main(*, session: AsyncSession = Depends(get_session), usuario: Usuario) -> Response:
+async def create(*, session: AsyncSession = Depends(get_session), usuario: Usuario) -> Response:
     usuario = Usuario(
         login= usuario.login, 
         senha= usuario.senha, 
@@ -46,7 +47,7 @@ async def main(*, session: AsyncSession = Depends(get_session), usuario: Usuario
     return usuario
 
 @router.post("/{usuario_id}", response_model=Usuario)
-async def main(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends(get_session) ) -> Response:
+async def update(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Usuario).filter_by(id=usuario_id)
     _result = await session.execute(_query)
     _usuario: Optional[Usuario] = _result.scalar_one_or_none()
@@ -63,7 +64,7 @@ async def main(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends
     return _usuario
 
 @router.delete("/{usuario_id}")
-async def main(usuario_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+async def delete(usuario_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Usuario).filter_by(id=usuario_id)
     _result = await session.execute(_query)
     _usuario: Optional[Usuario] = _result.scalar_one_or_none()

@@ -2,12 +2,13 @@ from datetime import date
 from random import choice, randint
 from typing import AsyncGenerator, Optional
 
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
+                                    create_async_engine)
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-from project.app.models import Usuario 
-
+from project.app.auth import hash_provider
+from project.app.models import Usuario
 from project.app.settings import settings
 
 global engine  # pylint: disable=global-at-module-level
@@ -48,8 +49,12 @@ async def create_data(session: AsyncSession) -> None:
     """
     Generate random data for tests.
     """
-    for i in range(10):
-        u = Usuario(login=f"login{i+1}", senha=f"senha{i+1}", cpf=f"{99999999990+i}", tipo_usuario=choice(["cidadao", "funcionario", "administrador"]), nome=f"Nome {i+1}")
-        session.add(u)
+    # for i in range(10):
+        # u = Usuario(login=f"login{i+1}", senha=f"senha{i+1}", cpf=f"{99999999990+i}", tipo_usuario=choice(["cidadao", "funcionario", "administrador"]), nome=f"Nome {i+1}")
+        # session.add(u)
+
+        # passh = hash_provider.gerar_hash(f"senha{i+1}")
+        # ld = loginData(login_user=f"user{i+1}", pwd_user=passh)
+        # session.add(ld)
 
     await session.commit()
