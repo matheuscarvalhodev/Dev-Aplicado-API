@@ -16,7 +16,7 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/notificacao")
 
 
-@router.get("", response_model=List[NotificacaoResposta])
+@router.get("", response_model=List[NotificacaoResposta], tags=["Notificações"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), 
     # sort: str = ["asc", "desc"]
     offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
@@ -25,7 +25,7 @@ async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), se
     _notificacao = _result.scalars().all()
     return _notificacao
 
-@router.get("/{notificacao_id}", response_model=NotificacaoResposta)
+@router.get("/{notificacao_id}", response_model=NotificacaoResposta, tags=["Notificações"])
 async def by_id(request: Request, notificacao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)
@@ -34,7 +34,7 @@ async def by_id(request: Request, notificacao_id: int, user: Usuario=Depends(obt
         raise HTTPException(status_code=404, detail="Notificacao not found")
     return _notificacao
 
-@router.post("/", response_model=NotificacaoResposta)
+@router.post("/", response_model=NotificacaoResposta, tags=["Notificações"])
 async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), notificacao: NotificacaoResposta) -> Response:
     _notificacao = NotificacaoResposta(notificacao.status)
     session.add(_notificacao)
@@ -42,7 +42,7 @@ async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncS
     await session.refresh(_notificacao)
     return _notificacao
 
-@router.post("/{notificacao_id}", response_model=NotificacaoResposta)
+@router.post("/{notificacao_id}", response_model=NotificacaoResposta, tags=["Notificações"])
 async def update(notificacao_id: int, notificacao: NotificacaoResposta, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)
@@ -55,7 +55,7 @@ async def update(notificacao_id: int, notificacao: NotificacaoResposta, user: Us
     await session.refresh(_notificacao)
     return _notificacao
 
-@router.delete("/{notificacao_id}")
+@router.delete("/{notificacao_id}", tags=["Notificações"])
 async def delete(notificacao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)

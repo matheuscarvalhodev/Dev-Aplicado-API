@@ -16,9 +16,10 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/auth")
 
 
+
 @router.post('/signup',
              status_code=status.HTTP_201_CREATED,
-             response_model=UsuarioSimples)
+             response_model=UsuarioSimples, tags=["Autorização"])
 async def signup(usuario: Usuario, session: AsyncSession = Depends(get_session)):
     _username = usuario.username
     _password = hash_provider.gerar_hash(usuario.password)
@@ -46,7 +47,7 @@ async def signup(usuario: Usuario, session: AsyncSession = Depends(get_session))
     return u
 
 
-@router.post("/token")
+@router.post("/token", tags=["Autorização"])
 async def login(login_data: LoginData, session: AsyncSession = Depends(get_session)) -> Response:
     _username = login_data.username
     _password = login_data.password
@@ -67,6 +68,6 @@ async def login(login_data: LoginData, session: AsyncSession = Depends(get_sessi
 """
     Para incluir autenticação na rota, deve ser incluído a dependência do modelo no fator de login
 """
-@router.get("/me", response_model=UsuarioSimples)
+@router.get("/me", response_model=UsuarioSimples, tags=["Autorização"])
 def me(usuario: Usuario=Depends(obter_usuario_logado)):
     return usuario
