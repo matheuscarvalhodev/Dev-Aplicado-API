@@ -28,7 +28,6 @@ class Ocorrencia(SQLModel, table=True):
     tel: Optional[str]
     uuid_ocorrencia: Optional[uuid_pkg.UUID] = Field(
         default_factory=uuid_pkg.uuid4,
-        primary_key=True,
         index=True,
     )
     long: Optional[str]
@@ -45,12 +44,12 @@ class Ocorrencia(SQLModel, table=True):
 class NotificacaoResposta(SQLModel, table=True):
     """
     id: int [PK]
-    status: str [NN]
+    status: int [NN]
     created_at: datetime
     updated_at: datetime
     """
     id: Optional[int] = Field(default=None, primary_key=True)
-    status: Optional[int] =  Field(default=0)
+    status: Optional[int] = Field(default=0)
     created_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )
@@ -105,6 +104,11 @@ class Usuario(SQLModel, table=True):
     tipo_usuario: Optional[int] = Field(default=0)
     nome: str
 
+class UsuarioListagem(SQLModel):
+    id: int
+    username: str
+    tipo_usuario: int
+    nome: str
 
 class UsuarioSimples(SQLModel):
     username: str
@@ -121,9 +125,9 @@ class LoginSucesso(SQLModel):
 
 class DadosHistoricos(SQLModel, table=True):
     """
-    id
-    data
-    nivel_agua
+    id [PK]
+    data [NN]
+    nivel_agua [NN]
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     data: date
@@ -131,12 +135,24 @@ class DadosHistoricos(SQLModel, table=True):
 
 class Previsao(SQLModel, table=True):
     """
-    id
-    nivel_agua
-    create_at
+    id [PK]
+    nivel_agua [NN]
+    create_at [NN]
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     nivel_agua: condecimal(max_digits=5, decimal_places=1) = Field(default=0)
     create_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )
+
+class Anexos(SQLModel, table=True):
+    """
+    id [PK]
+    url [NN]
+    name [NN]
+    ocorrencia_id [NN]
+    """
+    id: Optional[int] = Field(default=None, primary_key=True)
+    url: str
+    name: str
+    ocorrencia_id: int= Field(foreign_key="ocorrencia.id")

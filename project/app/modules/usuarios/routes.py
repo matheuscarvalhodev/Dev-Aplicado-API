@@ -8,7 +8,7 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import Previsao, Usuario
+from project.app.models import Previsao, Usuario, UsuarioListagem
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -17,14 +17,14 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/usuarios")
 
 
-@router.get("/", response_model=List[Usuario], tags=["Usuários"])
+@router.get("/", response_model=List[UsuarioListagem], tags=["Usuários"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(Usuario).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _usuario = _result.scalars().all()
     return _usuario
 
-@router.get("/{usuario_id}", response_model=Usuario, tags=["Usuários"])
+@router.get("/{usuario_id}", response_model=UsuarioListagem, tags=["Usuários"])
 async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(Usuario).filter_by(id=usuario_id)
     _result = await session.execute(_query)
@@ -33,7 +33,7 @@ async def by_id(request: Request, usuario_id: int, session: AsyncSession = Depen
         raise HTTPException(status_code=404, detail="Usuario not found")
     return usuario
 
-@router.post("/", response_model=Usuario, tags=["Usuários"])
+@router.post("/", response_model=UsuarioListagem, tags=["Usuários"])
 async def create(*, session: AsyncSession = Depends(get_session), usuario: Usuario) -> Response:
     usuario = Usuario(
         login= usuario.login, 
@@ -47,7 +47,7 @@ async def create(*, session: AsyncSession = Depends(get_session), usuario: Usuar
     await session.refresh(usuario)
     return usuario
 
-@router.post("/{usuario_id}", response_model=Usuario, tags=["Usuários"])
+@router.post("/{usuario_id}", response_model=UsuarioListagem, tags=["Usuários"])
 async def update(usuario_id: int,usuario: Usuario, session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Usuario).filter_by(id=usuario_id)
     _result = await session.execute(_query)
