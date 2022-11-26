@@ -24,7 +24,7 @@ async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), se
     return _instituicao
 
 @router.get("/{instituicao_id}", response_model=InstituicaoCompetente)
-async def by_id(request: Request, instituicao_id: int, session: AsyncSession = Depends(get_session)) -> Response:
+async def by_id(request: Request, instituicao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
     _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()
@@ -33,7 +33,7 @@ async def by_id(request: Request, instituicao_id: int, session: AsyncSession = D
     return _instituicao
 
 @router.post("/", response_model=InstituicaoCompetente)
-async def create(*, session: AsyncSession = Depends(get_session), instituicao: InstituicaoCompetente) -> Response:
+async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), instituicao: InstituicaoCompetente) -> Response:
     _instituicao = InstituicaoCompetente(
         name=instituicao.name,
         address=instituicao.address,
@@ -46,7 +46,7 @@ async def create(*, session: AsyncSession = Depends(get_session), instituicao: I
     return _instituicao
 
 @router.post("/{instituicao_id}", response_model=InstituicaoCompetente)
-async def update(instituicao_id: int,instituicao: InstituicaoCompetente, session: AsyncSession = Depends(get_session) ) -> Response:
+async def update(instituicao_id: int,instituicao: InstituicaoCompetente, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
     _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()
@@ -62,7 +62,7 @@ async def update(instituicao_id: int,instituicao: InstituicaoCompetente, session
     return _instituicao
 
 @router.delete("/{instituicao_id}")
-async def delete(instituicao_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+async def delete(instituicao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(InstituicaoCompetente).filter_by(id=instituicao_id)
     _result = await session.execute(_query)
     _instituicao: Optional[InstituicaoCompetente] = _result.scalar_one_or_none()

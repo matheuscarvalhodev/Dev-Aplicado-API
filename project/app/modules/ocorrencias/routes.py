@@ -6,9 +6,9 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
 
-from project.app.auth import hash_provider, token_provider
+from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import Ocorrencia, Previsao
+from project.app.models import Ocorrencia, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -17,14 +17,14 @@ router = APIRouter(prefix="/ocorrencias")
 
 
 @router.get("", response_model=List[Ocorrencia])
-async def list(request: Request, session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
+async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(Ocorrencia).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _ocorrencias = _result.scalars().all()
     return _ocorrencias
 
 @router.get("/{ocorrencia_id}", response_model=Ocorrencia)
-async def by_id(request: Request, ocorrencia_id: int, session: AsyncSession = Depends(get_session)) -> Response:
+async def by_id(request: Request, ocorrencia_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)
     _ocorrencia: Optional[Ocorrencia] = _result.scalar_one_or_none()
@@ -33,7 +33,7 @@ async def by_id(request: Request, ocorrencia_id: int, session: AsyncSession = De
     return _ocorrencia
 
 @router.post("/", response_model=Ocorrencia)
-async def create(*, session: AsyncSession = Depends(get_session), ocorrencia: Ocorrencia) -> Response:
+async def create(*, session: AsyncSession = Depends(get_session),user: Usuario=Depends(obter_usuario_logado), ocorrencia: Ocorrencia) -> Response:
     _ocorrencia = Ocorrencia(
         address= ocorrencia.address,
         name= ocorrencia.name,
@@ -50,8 +50,8 @@ async def create(*, session: AsyncSession = Depends(get_session), ocorrencia: Oc
     await session.refresh(_ocorrencia)
     return _ocorrencia
 
-@router.post("/{ocorrencia_id}", response_model=Ocorrencia)
-async def update(ocorrencia_id: int, ocorrencia: Ocorrencia, session: AsyncSession = Depends(get_session) ) -> Response:
+@router.post("/{ocorrencia_id}",  response_model=Ocorrencia)
+async def update(ocorrencia_id: int, ocorrencia: Ocorrencia,user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)
     _ocorrencia: Optional[Ocorrencia] = _result.scalar_one_or_none()
@@ -72,7 +72,7 @@ async def update(ocorrencia_id: int, ocorrencia: Ocorrencia, session: AsyncSessi
     return _ocorrencia
 
 @router.delete("/{ocorrencia_id}")
-async def delete(ocorrencia_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+async def delete(ocorrencia_id: int,user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)
     _ocorrencia: Optional[Ocorrencia] = _result.scalar_one_or_none()

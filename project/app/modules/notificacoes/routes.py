@@ -6,7 +6,7 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.templating import _TemplateResponse
 
-from project.app.auth import hash_provider, token_provider
+from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
 from project.app.models import NotificacaoResposta, Previsao, Usuario
 from project.app.settings import settings
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/notificacao")
 
 
 @router.get("", response_model=List[NotificacaoResposta])
-async def list(request: Request, session: AsyncSession = Depends(get_session), 
+async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), 
     # sort: str = ["asc", "desc"]
     offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(NotificacaoResposta).offset(offset).limit(limit).order_by(desc(NotificacaoResposta.id))
@@ -26,7 +26,7 @@ async def list(request: Request, session: AsyncSession = Depends(get_session),
     return _notificacao
 
 @router.get("/{notificacao_id}", response_model=NotificacaoResposta)
-async def by_id(request: Request, notificacao_id: int, session: AsyncSession = Depends(get_session)) -> Response:
+async def by_id(request: Request, notificacao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)
     _notificacao: Optional[NotificacaoResposta] = _result.scalar_one_or_none()
@@ -35,7 +35,7 @@ async def by_id(request: Request, notificacao_id: int, session: AsyncSession = D
     return _notificacao
 
 @router.post("/", response_model=NotificacaoResposta)
-async def create(*, session: AsyncSession = Depends(get_session), notificacao: NotificacaoResposta) -> Response:
+async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), notificacao: NotificacaoResposta) -> Response:
     _notificacao = NotificacaoResposta(notificacao.status)
     session.add(_notificacao)
     await session.commit()
@@ -43,7 +43,7 @@ async def create(*, session: AsyncSession = Depends(get_session), notificacao: N
     return _notificacao
 
 @router.post("/{notificacao_id}", response_model=NotificacaoResposta)
-async def update(notificacao_id: int,notificacao: NotificacaoResposta, session: AsyncSession = Depends(get_session) ) -> Response:
+async def update(notificacao_id: int, notificacao: NotificacaoResposta, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)
     _notificacao: Optional[NotificacaoResposta] = _result.scalar_one_or_none()
@@ -56,7 +56,7 @@ async def update(notificacao_id: int,notificacao: NotificacaoResposta, session: 
     return _notificacao
 
 @router.delete("/{notificacao_id}")
-async def delete(notificacao_id: int, session: AsyncSession = Depends(get_session) ) -> Response:
+async def delete(notificacao_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(NotificacaoResposta).filter_by(id=notificacao_id)
     _result = await session.execute(_query)
     _notificacao: Optional[NotificacaoResposta] = _result.scalar_one_or_none()

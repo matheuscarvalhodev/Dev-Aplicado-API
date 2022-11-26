@@ -3,6 +3,8 @@ from typing import List, Optional
 from fastapi import APIRouter, FastAPI, File, Request, UploadFile
 from fastapi.staticfiles import StaticFiles
 
+from project.app.utils.generate import namefile
+
 # from fastapi import APIRouter, Depends, HTTPException, Query, Request
 # from fastapi.responses import JSONResponse, RedirectResponse
 # from sqlalchemy import desc, select
@@ -20,6 +22,7 @@ router = APIRouter(prefix="/uploads")
 
 @router.post("/file")
 async def create_upload_file(file: UploadFile = File(...)):
+    print(namefile())
     return {"filename": file.filename}
 
 @router.post("/files")

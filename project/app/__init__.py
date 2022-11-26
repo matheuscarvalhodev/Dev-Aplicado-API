@@ -14,8 +14,10 @@ from project.app.modules.main.routes import \
 from project.app.modules.notificacoes.routes import router as notificacoes
 from project.app.modules.ocorrencias.routes import router as ocorrencias
 from project.app.modules.previsao.routes import router as previsao
+from project.app.modules.tipos_ocorrencias.routes import \
+    router as tipos_ocorrencias
 from project.app.modules.uploads.routes import router as uploads
-from project.app.modules.usuarios.routes import router as users
+from project.app.modules.usuarios.routes import router as usuarios
 
 from .settings import BaseSettings, get_settings
 
@@ -68,47 +70,37 @@ def create_app(
     
 
     description = """
-    ChimichangApp API helps you do awesome stuff. 🚀
-
-    ## Items
-
-    You can **read items**.
-
-    ## Users
-
-    You will be able to:
-
-    * **Create users** (_not implemented_).
-    * **Read users** (_not implemented_).
+    Descrição muito boa para a documentação!
     """
     # Adicionando descrição para o Swagger: https://fastapi.tiangolo.com/tutorial/metadata/
     # https://fastapi.tiangolo.com/tutorial/metadata/
     # create a new app
     app = FastAPI(middleware=middleware,
-          title="ChimichangApp",
+          title="Dev-Aplicado",
     description=description,
     version="0.0.1",
     terms_of_service="http://example.com/terms/",
     contact={
-        "name": "Deadpoolio the Amazing",
-        "url": "http://x-force.example.com/contact/",
-        "email": "dp@x-force.example.com",
+        "name": "aejunior",
+        "url": "https://github.com/aejunior",
+        "email": "user.emerson@outlook.com",
     },
     license_info={
-        "name": "Apache 2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+        "name": "MIT License",
+        "url": "https://github.com/matheuscarvalhodev/Dev-Aplicado-API/blob/main/LICENSE",
     },
            )
 
 
     # include external routers
-    app.include_router(_main)
-    app.include_router(users)
     app.include_router(auth)
-    app.include_router(uploads)
-    app.include_router(previsao)
-    app.include_router(ocorrencias)
-    app.include_router(notificacoes)
     app.include_router(instituicoes)
+    app.include_router(_main)
+    app.include_router(notificacoes)
+    app.include_router(ocorrencias)
+    app.include_router(previsao)
+    app.include_router(tipos_ocorrencias)
+    app.include_router(uploads)
+    app.include_router(usuarios)
 
     return app, settings
