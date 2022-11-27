@@ -106,6 +106,11 @@ class Usuario(SQLModel, table=True):
     cpf: str = Field(sa_column=Column("cpf", String, unique=True), index=True)
     tipo_usuario: Optional[int] = Field(default=1)
     nome: str
+class UsuarioSignin(SQLModel):
+    username: str
+    password: str
+    cpf: str
+    nome: str
 
 class UsuarioListagem(SQLModel):
     id: int
