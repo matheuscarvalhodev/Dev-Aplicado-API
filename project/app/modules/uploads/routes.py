@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import DadosHistoricos, Usuario
+from project.app.models import DadosHistoricos, Usuario, UsuarioSignin
 from project.app.utils.generate import namefile, read_xlsx
 
 # from starlette.templating import _TemplateResponse
