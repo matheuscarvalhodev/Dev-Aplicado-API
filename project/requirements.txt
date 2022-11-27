@@ -5,9 +5,8 @@ sqlmodel==0.0.6
 uvicorn==0.18.2
 itsdangerous==2.1.2
 # https://fastapi.tiangolo.com/pt/tutorial/security/oauth2-jwt/#__tabbed_1_1 
-passlib
-passlib[bcrypt]
-python-jose
-python-jose[cryptography]
-
-pydantic
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]===3.3.0
+pydantic==1.10.2
+pandas==1.5.2
+openpyxl
