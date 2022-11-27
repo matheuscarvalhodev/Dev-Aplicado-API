@@ -3,6 +3,7 @@ from datetime import date, datetime
 from typing import Optional
 
 from pydantic import condecimal
+from sqlalchemy.dialects.postgresql import TEXT
 from sqlalchemy.sql import func
 from sqlmodel import Column, DateTime, Field, SQLModel, String
 
@@ -14,6 +15,7 @@ class Ocorrencia(SQLModel, table=True):
     name: str [OP]
     tel: str [OP]
     uuid_ocorrencia: uuid [OP]
+    descricao: str [NN]
     long: str [OP]
     lati: str [OP]
     created_at: datetime [OP]
@@ -30,6 +32,7 @@ class Ocorrencia(SQLModel, table=True):
         default_factory=uuid_pkg.uuid4,
         index=True,
     )
+    descricao: Optional[str] = Field(sa_column=Column('descricao', TEXT), default=None)
     long: Optional[str]
     lati: Optional[str]
     created_at: Optional[datetime] = Field(
@@ -69,7 +72,7 @@ class TipoOcorrenciaAutuacao(SQLModel, table=True):
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str
-    descricao: str
+    descricao: str = Field(sa_column=Column('descricao', TEXT))
     prioridade: int
     tipo: str
     instituicao_id: Optional[int] = Field(default=None, foreign_key="instituicaocompetente.id")
