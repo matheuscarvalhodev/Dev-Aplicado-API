@@ -13,7 +13,7 @@ from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
 
-router = APIRouter(prefix="/tipo-ocorrencia")
+router = APIRouter(prefix="/tipos-ocorrencias")
 
 
 @router.get("/", response_model=List[TipoOcorrenciaAutuacao])

@@ -13,7 +13,7 @@ from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
 
-router = APIRouter(prefix="/notificacao")
+router = APIRouter(prefix="/notificacoes")
 
 
 @router.get("", response_model=List[NotificacaoResposta], tags=["Notificações"])
