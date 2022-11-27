@@ -156,3 +156,4 @@ class Anexos(SQLModel, table=True):
     url: str
     name: str
     ocorrencia_id: int= Field(foreign_key="ocorrencia.id")
+    usuario_id: int= Field(foreign_key="usuario.id")

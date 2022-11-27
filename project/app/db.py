@@ -2,6 +2,7 @@ from datetime import date
 from random import choice, randint, uniform
 from typing import AsyncGenerator, Optional
 
+from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     create_async_engine)
 from sqlalchemy.orm import sessionmaker
@@ -15,7 +16,6 @@ from project.app.settings import settings
 
 global engine  # pylint: disable=global-at-module-level
 engine: Optional[AsyncEngine] = None
-
 
 def get_engine() -> AsyncEngine:
     global engine  # pylint: disable=global-statement

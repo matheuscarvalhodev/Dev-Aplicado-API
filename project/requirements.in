@@ -2,10 +2,6 @@
 fastapi
 uvicorn
 
-# templating engine
-jinja2
-
-
 # support for forms in FastAPI
 python-multipart
 
@@ -17,11 +13,12 @@ asyncpg
 # session middleware
 itsdangerous
 
-
 # https://fastapi.tiangolo.com/pt/tutorial/security/oauth2-jwt/#__tabbed_1_1 
-passlib
 passlib[bcrypt]
-python-jose
 python-jose[cryptography]
 
 pydantic
+
+# processamento da planilha de previsão
+pandas
+openpyxl
