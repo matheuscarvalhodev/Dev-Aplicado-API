@@ -23,7 +23,16 @@ router = APIRouter(prefix="/uploads")
 @router.post("/file", tags=["Arquivos"])
 async def create_upload_file(file: UploadFile = File(...)):
     print(namefile())
-    return {"filename": file.filename}
+    try:
+        with open(file.filename, 'wb') as f:
+            while contents := file.file.read(1024 * 1024):
+                f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+
+    return {"message": f"Successfully uploaded {file.filename}"}
 
 @router.post("/files", tags=["Arquivos"])
 async def create_upload_files(files: List[UploadFile] = File(description="Multiple files as UploadFile"),):
