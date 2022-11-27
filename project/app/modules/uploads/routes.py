@@ -10,8 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from project.app.auth.utils import obter_usuario_logado
-from project.app.db import get_session, pd_engine
-from project.app.models import Usuario
+from project.app.db import get_session
+from project.app.models import DadosHistoricos, Usuario
 from project.app.utils.generate import namefile, read_xlsx
 
 # from starlette.templating import _TemplateResponse
@@ -24,7 +24,8 @@ router = APIRouter(prefix="/uploads")
 
 @router.post("/df", tags=["Arquivos"])
 async def create_upload_file(file: UploadFile = File(...),
-    # user: Usuario=Depends(obter_usuario_logado)
+    user: Usuario=Depends(obter_usuario_logado),
+    session: AsyncSession = Depends(get_session)
     ):
     if(file.content_type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" and file.filename.split(".")[-1] != "xlsx"):
         raise HTTPException(status_code=415, detail="Formato de arquivo não aceito")
@@ -33,15 +34,18 @@ async def create_upload_file(file: UploadFile = File(...),
     df['Data'] = df.Data.astype('datetime64[ns]')
     df = df[['Data','Nivel_agua']].fillna(0)
     df = df.rename(columns={'Data': 'data', 'Nivel_agua': 'nivel_agua'})
-    try:
-        await df.to_sql('DadosHistoricos', con=pd_engine)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Falha ao processar dados")
-    return JSONResponse({"message": "Dados processados"})
-    # return {"filename": file.filename}
-
+    if(user.tipo_usuario >= 2):
+        try:
+            for i in df.itertuples():
+                _dados_historicos = DadosHistoricos(data=i[1], nivel_agua=i[2])
+                session.add(_dados_historicos)
+            await session.commit()
+        except Exception:
+            raise HTTPException(status_code=500, detail="Falha ao processar dados")
+        return JSONResponse({"message": "Dados processados"})
+    raise HTTPException(status_code=401, detail="Usuário não autorizado")
 @router.post("/file", tags=["Arquivos"])
-async def create_upload_file(file: UploadFile = File(...)):
+async def create_upload_file(file: UploadFile = File(...), ):
     print(namefile())
     return {"filename": file.filename}
 

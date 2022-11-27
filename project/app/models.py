@@ -97,14 +97,14 @@ class Usuario(SQLModel, table=True):
     username: str [NN]
     password: str [NN]
     cpf: str [NN]
-    tipo_usuario: int [OP] = 0-convidado || 1-cidadão || 2-agente de fiscalização || 3-gerenciador || 4-administrador
+    tipo_usuario: int [OP] = 0-cidadão || 1-agente de fiscalização || 2-gerenciador || 3-administrador
     nome: str [NN]
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True, sa_column=Column("username", String, unique=True))
     password: str
     cpf: str = Field(sa_column=Column("cpf", String, unique=True), index=True)
-    tipo_usuario: Optional[int] = Field(default=0)
+    tipo_usuario: Optional[int] = Field(default=1)
     nome: str
 
 class UsuarioListagem(SQLModel):
@@ -160,3 +160,14 @@ class Anexos(SQLModel, table=True):
     name: str
     ocorrencia_id: int= Field(foreign_key="ocorrencia.id")
     usuario_id: int= Field(foreign_key="usuario.id")
+
+class Newsletter(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    body:str
+    created_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
+    updated_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=True, server_default=func.now(), onupdate=datetime.now)
+    )

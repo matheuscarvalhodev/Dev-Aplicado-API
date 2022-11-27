@@ -51,17 +51,13 @@ async def create_data(session: AsyncSession) -> None:
     """
     Generate random data for tests.
     """
-    # for i in range(10):
-        # u = Usuario(login=f"login{i+1}", senha=f"senha{i+1}", cpf=f"{99999999990+i}", tipo_usuario=choice(["cidadao", "funcionario", "administrador"]), nome=f"Nome {i+1}")
-        # session.add(u)
-
     for i in range(5):
         passh = hash_provider.gerar_hash(f"senha{i+1}")
         ld = Usuario(
             username=f"username{i+1}",
             password=passh,
             cpf=f"1231231231{i+1}",
-            tipo_usuario=choice([0,1,2,3,4]),
+            tipo_usuario=choice([0,1,2,3]),
             nome=f"Usuário {i+1}",
             )
         session.add(ld)
@@ -98,5 +94,38 @@ async def create_data(session: AsyncSession) -> None:
             tipo=f"Tipo {i+1}"
         )
         session.add(to)
+    passw = lambda a : hash_provider.gerar_hash(a)
+    cidadao = Usuario(
+            username=f"cidadao",
+            password=passw("cidadao"),
+            cpf=f"1231231239{0+1}",
+            tipo_usuario=0,
+            nome=f"Cidadão",
+            )
+    session.add(cidadao)
+    agente = Usuario(
+            username=f"agente",
+            password=passw("agente"),
+            cpf=f"1231231239{1+1}",
+            tipo_usuario=1,
+            nome=f"Agente",
+            )
+    session.add(agente)
+    gerenciador = Usuario(
+            username=f"gerenciador",
+            password=passw("gerenciador"),
+            cpf=f"1231231239{2+1}",
+            tipo_usuario=2,
+            nome=f"Gerenciador",
+            )
+    session.add(gerenciador)
     
+    administrador = Usuario(
+            username=f"administrador",
+            password=passw("administrador"),
+            cpf=f"1231231239{3+1}",
+            tipo_usuario=3,
+            nome=f"Administrador",
+            )
+    session.add(administrador)
     await session.commit()
