@@ -16,14 +16,14 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/tipo-ocorrencia")
 
 
-@router.get("/", response_model=List[TipoOcorrenciaAutuacao])
+@router.get("/", response_model=List[TipoOcorrenciaAutuacao], tags=["Tipos de Ocorrências"], summary=["Lista todos os tipos de ocorrência"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(TipoOcorrenciaAutuacao).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _ocorrencia_autuacao = _result.scalars().all()
     return _ocorrencia_autuacao
 
-@router.get("/{tipoOcorrenciaId}", response_model=TipoOcorrenciaAutuacao)
+@router.get("/{tipoOcorrenciaId}", response_model=TipoOcorrenciaAutuacao, tags=["Lista o tipo de ocorrência a partir do id"])
 async def by_id(request: Request, tipoOcorrenciaId: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipoOcorrenciaId)
     _result = await session.execute(_query)
@@ -32,7 +32,7 @@ async def by_id(request: Request, tipoOcorrenciaId: int, user: Usuario=Depends(o
         raise HTTPException(status_code=404, detail="TipoOcorrenciaAutuacao not found")
     return _tipo_ocorrencia_id
 
-@router.post("/", response_model=TipoOcorrenciaAutuacao)
+@router.post("/", response_model=TipoOcorrenciaAutuacao, tags=["Tipos de Ocorrências"], summary=["Cria novo tipo de ocorrência"])
 async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), tipo_ocorrencia: TipoOcorrenciaAutuacao) -> Response:
     _tipo_ocorrencia = TipoOcorrenciaAutuacao(
         nome= tipo_ocorrencia.nome,
@@ -46,7 +46,7 @@ async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncS
     await session.refresh(_tipo_ocorrencia)
     return _tipo_ocorrencia
 
-@router.post("/{tipo_ocorrencia_id}", response_model=TipoOcorrenciaAutuacao)
+@router.post("/{tipo_ocorrencia_id}", response_model=TipoOcorrenciaAutuacao, tags=["Tipos de Ocorrências"], summary=["Atualiza as informações do tipo de ocorrência"])
 async def update(tipo_ocorrencia_id: int, tipo_ocorrencia: TipoOcorrenciaAutuacao, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipo_ocorrencia_id)
     _result = await session.execute(_query)
@@ -66,7 +66,7 @@ async def update(tipo_ocorrencia_id: int, tipo_ocorrencia: TipoOcorrenciaAutuaca
     await session.refresh(_tipo_ocorrencia)
     return _tipo_ocorrencia
 
-@router.delete("/{tipo_ocorrencia_id}")
+@router.delete("/{tipo_ocorrencia_id}", tags=["Tipos de Ocorrências"], summary=["Deleta o tipo de ocorrência"])
 async def delete(tipo_ocorrencia_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipo_ocorrencia_id)
     _result = await session.execute(_query)

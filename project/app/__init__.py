@@ -69,15 +69,59 @@ def create_app(
 
     
 
-    description = """
-    Descrição muito boa para a documentação!
-    """
+
+
+    tags_metadata = [
+    {
+        "name": "Usuário",
+        "description": "Rotas de usuários",
+    },
+    {
+        "name": "Arquivos",
+        "description": "Rotas para Upload de arquivos externos",
+    },
+     {
+        "name": "Tipos de Ocorrências",
+        "description": "Rotas de Tipos de OcorRências",
+    },
+     {
+        "name": "Previsão",
+        "description": "Rotas para Previsão",
+    },
+     {
+        "name": "Ocorrências",
+        "description": "Rotas para Ocorrências",
+    },
+     {
+        "name": "Notificações",
+        "description": "Rotas para Notificações",
+    },
+    {
+        "name": "Teste de conexão",
+        "description": "Rota para realizar o teste de conexão",
+    },
+     {
+        "name": "Instituição",
+        "description": "Rotas para Instituição",
+    },
+     {
+        "name": "Autenticação",
+        "description": "Rotas com autenticação do usuário",
+    },
+
+    ]
     # Adicionando descrição para o Swagger: https://fastapi.tiangolo.com/tutorial/metadata/
     # https://fastapi.tiangolo.com/tutorial/metadata/
     # create a new app
     app = FastAPI(middleware=middleware,
-          title="Dev-Aplicado",
-    description=description,
+          title="Rotas do Projeto Dev-Aplicado",
+    description="Projeto do Back-end da disciplina Projetos de Desenvolvimento Aplicado - UFOPA CORI, utilizando framework FastAPI, async SQLAlchemy, SQLModel, Postgres, Alembic e Docker. \n\n "
+
+        "Você pode ler a documentação das ferramentas utilizadas no projeto em [FastAPI](https://fastapi.tiangolo.com/), [SQLAlchemy](https://docs.sqlalchemy.org/en/14/),"
+        "[SQLModel](https://sqlmodel.tiangolo.com/), [Postgres](https://www.postgresql.org/docs/), [Alembic](https://alembic.sqlalchemy.org/en/latest/), [Docker](https://docs.docker.com/). \n\n"
+
+        "O projeto da disciplina tem como objetivo desenvolver um sistema de coleta de informações, denúncias e soluções, através da modernização de sistemas de recebimento de informações, inicialmente atendendo as demandas da Secretaria de Meio Ambiente - SEMMA e Defesa Civil do Município de Oriximiná - Pará."
+    ,
     version="0.0.1",
     terms_of_service="http://example.com/terms/",
     contact={
@@ -89,6 +133,7 @@ def create_app(
         "name": "MIT License",
         "url": "https://github.com/matheuscarvalhodev/Dev-Aplicado-API/blob/main/LICENSE",
     },
+    openapi_tags=tags_metadata,
            )
 
 

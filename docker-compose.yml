@@ -7,7 +7,7 @@ services:
     command: uvicorn project.app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
       - ./project:/home/rest/project
-      - media_db:/home/rest/project/media
+    #  - media_db:/home/rest/project/media
     ports:
       - 8000:8000
     environment:
@@ -37,5 +37,5 @@ services:
     volumes:
         - .redis_data:/data
       # https://geshan.com.np/blog/2022/01/redis-docker/
-  volumes:
-    media_db:
+  #volumes:
+  #  media_db:
