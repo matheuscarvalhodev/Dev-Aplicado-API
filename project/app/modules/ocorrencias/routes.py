@@ -16,14 +16,14 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/ocorrencias")
 
 
-@router.get("", response_model=List[Ocorrencia], tags=["Ocorrências"])
+@router.get("", response_model=List[Ocorrencia], tags=["Ocorrências"], summary=["Lista todas as ocorrências"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(Ocorrencia).offset(offset).limit(limit)
     _result = await session.execute(_query)
     _ocorrencias = _result.scalars().all()
     return _ocorrencias
 
-@router.get("/{ocorrencia_id}", response_model=Ocorrencia, tags=["Ocorrências"])
+@router.get("/{ocorrencia_id}", response_model=Ocorrencia, tags=["Ocorrências"], summary=["Lista ocorrência a partir do id"])
 async def by_id(request: Request, ocorrencia_id: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)
@@ -32,7 +32,7 @@ async def by_id(request: Request, ocorrencia_id: int, user: Usuario=Depends(obte
         raise HTTPException(status_code=404, detail="Ocorrencia not found")
     return _ocorrencia
 
-@router.post("/", response_model=Ocorrencia, tags=["Ocorrências"])
+@router.post("/", response_model=Ocorrencia, tags=["Ocorrências"], summary=["Criar nova ocorrência"])
 async def create(*, 
     session: AsyncSession = Depends(get_session),
     user: Usuario=Depends(obter_usuario_logado), 
@@ -53,7 +53,7 @@ async def create(*,
     await session.refresh(_ocorrencia)
     return _ocorrencia
 
-@router.post("/{ocorrencia_id}", response_model=Ocorrencia, tags=["Ocorrências"])
+@router.post("/{ocorrencia_id}", response_model=Ocorrencia, tags=["Ocorrências"], summary=["Atualiza informações da ocorrência"])
 async def update(
     ocorrencia_id: int, 
     ocorrencia: Ocorrencia,
@@ -79,7 +79,7 @@ async def update(
     await session.refresh(_ocorrencia)
     return _ocorrencia
 
-@router.delete("/{ocorrencia_id}", tags=["Ocorrências"])
+@router.delete("/{ocorrencia_id}", tags=["Ocorrências"], summary=["Deleta ocorrência"])
 async def delete(ocorrencia_id: int,user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)

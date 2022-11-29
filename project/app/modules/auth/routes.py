@@ -21,7 +21,7 @@ router = APIRouter(prefix="/auth")
 
 @router.post('/signup',
              status_code=status.HTTP_201_CREATED,
-             response_model=UsuarioSimples, tags=["Autorização"])
+             response_model=UsuarioSimples, tags=["Autorização"], summary=["Registro de usuário"])
 async def signup(usuario: UsuarioSignin, session: AsyncSession = Depends(get_session)):
     _username = usuario.username
     _password = hash_provider.gerar_hash(usuario.password)
@@ -49,7 +49,7 @@ async def signup(usuario: UsuarioSignin, session: AsyncSession = Depends(get_ses
     return u
 
 
-@router.post("/token",response_model=LoginSucesso, tags=["Autorização"])
+@router.post("/token",response_model=LoginSucesso, tags=["Autorização"], summary=["Login de usuário"])
 async def login(req: Request, session: AsyncSession = Depends(get_session)) -> Response:
     if req.headers['Content-Type'] not in ['application/json', 'application/x-www-form-urlencoded']:
        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -76,6 +76,6 @@ async def login(req: Request, session: AsyncSession = Depends(get_session)) -> R
 """
     Para incluir autenticação na rota, deve ser incluído a dependência do modelo no fator de login
 """
-@router.get("/me", response_model=UsuarioSimples, tags=["Autorização"])
+@router.get("/me", response_model=UsuarioSimples, tags=["Autenticação"], summary=["Verifica se o token do usuário é válido"])
 def me(usuario: Usuario=Depends(obter_usuario_logado)):
     return usuario

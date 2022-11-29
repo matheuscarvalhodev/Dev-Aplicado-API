@@ -13,6 +13,6 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter()
 
 
-@router.get("/", tags=["Teste de conexão"])
+@router.get("/", tags=["Teste de conexão"], summary=["Realiza teste de conexão"])
 async def main(request: Request) -> Response:
     return JSONResponse(content={"ping": "pong"})

@@ -22,7 +22,7 @@ from project.app.utils.generate import namefile, read_xlsx
 
 router = APIRouter(prefix="/uploads")
 
-@router.post("/df", tags=["Arquivos"])
+@router.post("/df", tags=["Arquivos"], summary=["Upload dos dados de previsão"])
 async def create_upload_file(file: UploadFile = File(...),
     user: Usuario=Depends(obter_usuario_logado),
     session: AsyncSession = Depends(get_session)
@@ -44,11 +44,12 @@ async def create_upload_file(file: UploadFile = File(...),
             raise HTTPException(status_code=500, detail="Falha ao processar dados")
         return JSONResponse({"message": "Dados processados"})
     raise HTTPException(status_code=401, detail="Usuário não autorizado")
-@router.post("/file", tags=["Arquivos"])
+
+@router.post("/file", tags=["Arquivos"], summary=['Upload de apenas um arquivo'])
 async def create_upload_file(file: UploadFile = File(...), ):
     print(namefile())
     return {"filename": file.filename}
 
-@router.post("/files", tags=["Arquivos"])
+@router.post("/files", tags=["Arquivos"], summary=["Upload de mais de um arquivo"])
 async def create_upload_files(files: List[UploadFile] = File(description="Multiple files as UploadFile"),):
     return {"filenames": [file.filename for file in files]}

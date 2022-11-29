@@ -16,7 +16,7 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/previsao")
 
 
-@router.get("", response_model=Previsao, tags=["Previsão"])
+@router.get("", response_model=Previsao, tags=["Previsão"], summary=["Lista previsão"])
 async def list(request: Request, session: AsyncSession = Depends(get_session)
     # , offset: int = 0, limit: int = Query(default=100, lte=100)
     ) -> Response:
