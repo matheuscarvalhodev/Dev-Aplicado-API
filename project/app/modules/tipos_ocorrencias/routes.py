@@ -23,7 +23,7 @@ async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), se
     _ocorrencia_autuacao = _result.scalars().all()
     return _ocorrencia_autuacao
 
-@router.get("/{tipoOcorrenciaId}", response_model=TipoOcorrenciaAutuacao, tags=["Lista o tipo de ocorrência a partir do id"])
+@router.get("/{tipoOcorrenciaId}", response_model=TipoOcorrenciaAutuacao, tags=["Tipos de Ocorrências"], summary=["Lista o tipo de ocorrência a partir do id"] )
 async def by_id(request: Request, tipoOcorrenciaId: int, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session)) -> Response:
     _query = select(TipoOcorrenciaAutuacao).filter_by(id=tipoOcorrenciaId)
     _result = await session.execute(_query)
