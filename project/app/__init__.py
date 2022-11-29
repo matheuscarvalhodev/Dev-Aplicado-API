@@ -82,7 +82,7 @@ def create_app(
     },
      {
         "name": "Tipos de Ocorrências",
-        "description": "Rotas de Tipos de OcorRências",
+        "description": "Rotas de Tipos de Ocorrências",
     },
      {
         "name": "Previsão",

@@ -16,7 +16,7 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/instituicoes")
 
 
-@router.get("", response_model=List[InstituicaoCompetente], tags=["Instituição"], summary=["Lista todas as instituições presentes no db"])
+@router.get("", response_model=List[InstituicaoCompetente], tags=["Instituição"], summary=["Lista todas as instituições presentes no Banco de Dados"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
     _query = select(InstituicaoCompetente).offset(offset).limit(limit)
     _result = await session.execute(_query)
