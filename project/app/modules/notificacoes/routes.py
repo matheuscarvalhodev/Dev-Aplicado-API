@@ -17,7 +17,7 @@ Response = _TemplateResponse | RedirectResponse
 router = APIRouter(prefix="/notificacoes")
 
 
-@router.get("", response_model=List[NotificacaoResposta], tags=["Notificações"], summary=["Lista todas as notificações presentes no db"])
+@router.get("", response_model=List[NotificacaoResposta], tags=["Notificações"], summary=["Lista todas as notificações presentes no Banco de Dados"])
 async def list(request: Request, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), 
     # sort: str = ["asc", "desc"]
     offset: int = 0, limit: int = Query(default=100, lte=100)) -> Response:
