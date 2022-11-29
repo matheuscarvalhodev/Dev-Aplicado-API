@@ -8,7 +8,8 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import NotificacaoResposta, Previsao, Usuario
+from project.app.models import (NotificacaoResposta, NotificacaoRespostaCreate,
+                                Previsao, Usuario)
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -34,7 +35,7 @@ async def by_id(request: Request, notificacao_id: int, user: Usuario=Depends(obt
         raise HTTPException(status_code=404, detail="Notificacao not found")
     return _notificacao
 
-@router.post("/", response_model=NotificacaoResposta, tags=["Notificações"])
+@router.post("/", response_model=NotificacaoRespostaCreate, tags=["Notificações"])
 async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), notificacao: NotificacaoResposta) -> Response:
     _notificacao = NotificacaoResposta(notificacao.status)
     session.add(_notificacao)

@@ -43,6 +43,13 @@ class Ocorrencia(SQLModel, table=True):
     instituicao_id: int = Field(default=None, foreign_key="instituicaocompetente.id")
     usuario_id: Optional[int] = Field(default=None, foreign_key="usuario.id")
 
+class OcorrenciaCreate(SQLModel):
+    address: str
+    name: Optional[str]
+    tel: Optional[str]
+    descricao: str
+    long: Optional[str]
+    lati: Optional[str]
 
 class NotificacaoResposta(SQLModel, table=True):
     """
@@ -61,6 +68,9 @@ class NotificacaoResposta(SQLModel, table=True):
     )
 
 
+class NotificacaoRespostaCreate(SQLModel):
+    status: Optional[int] = Field(default=0)
+
 class TipoOcorrenciaAutuacao(SQLModel, table=True):
     """
     id: int [PK]
@@ -77,6 +87,7 @@ class TipoOcorrenciaAutuacao(SQLModel, table=True):
     tipo: str
     instituicao_id: Optional[int] = Field(default=None, foreign_key="instituicaocompetente.id")
 
+    
 class InstituicaoCompetente(SQLModel, table=True):
     """
     id: int [PK]
@@ -86,6 +97,11 @@ class InstituicaoCompetente(SQLModel, table=True):
     email: str [OP]
     """
     id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    address: str
+    tel: Optional[str]
+    email: Optional[str]
+class InstituicaoCompetenteCreate(SQLModel):
     name: str
     address: str
     tel: Optional[str]
@@ -159,6 +175,7 @@ class Anexos(SQLModel, table=True):
     url [NN]
     name [NN]
     ocorrencia_id [NN]
+    usuario_id [NN]
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     url: str
@@ -167,6 +184,13 @@ class Anexos(SQLModel, table=True):
     usuario_id: int= Field(foreign_key="usuario.id")
 
 class Newsletter(SQLModel, table=True):
+    """
+    id [PK]
+    title [NN]
+    body [NN]
+    created_at [OP]
+    updated_at [OP]
+    """
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str
     body:str
