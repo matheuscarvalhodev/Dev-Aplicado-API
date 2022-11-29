@@ -8,7 +8,7 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import Ocorrencia, Usuario
+from project.app.models import Ocorrencia, OcorrenciaCreate, Usuario
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -33,7 +33,10 @@ async def by_id(request: Request, ocorrencia_id: int, user: Usuario=Depends(obte
     return _ocorrencia
 
 @router.post("/", response_model=Ocorrencia, tags=["Ocorrências"], summary=["Criar nova ocorrência"])
-async def create(*, session: AsyncSession = Depends(get_session),user: Usuario=Depends(obter_usuario_logado), ocorrencia: Ocorrencia) -> Response:
+async def create(*, 
+    session: AsyncSession = Depends(get_session),
+    user: Usuario=Depends(obter_usuario_logado), 
+    ocorrencia: OcorrenciaCreate) -> Response:
     _ocorrencia = Ocorrencia(
         address= ocorrencia.address,
         name= ocorrencia.name,
@@ -51,7 +54,12 @@ async def create(*, session: AsyncSession = Depends(get_session),user: Usuario=D
     return _ocorrencia
 
 @router.post("/{ocorrencia_id}", response_model=Ocorrencia, tags=["Ocorrências"], summary=["Atualiza informações da ocorrência"])
-async def update(ocorrencia_id: int, ocorrencia: Ocorrencia,user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session) ) -> Response:
+async def update(
+    ocorrencia_id: int, 
+    ocorrencia: Ocorrencia,
+    user: Usuario=Depends(obter_usuario_logado), 
+    session: AsyncSession = Depends(get_session) 
+    ) -> Response:
     _query = select(Ocorrencia).filter_by(id=ocorrencia_id)
     _result = await session.execute(_query)
     _ocorrencia: Optional[Ocorrencia] = _result.scalar_one_or_none()

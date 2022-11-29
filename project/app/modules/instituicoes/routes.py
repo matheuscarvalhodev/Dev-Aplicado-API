@@ -8,7 +8,8 @@ from starlette.templating import _TemplateResponse
 
 from project.app.auth.utils import obter_usuario_logado
 from project.app.db import get_session
-from project.app.models import InstituicaoCompetente, Previsao, Usuario
+from project.app.models import (InstituicaoCompetente,
+                                InstituicaoCompetenteCreate, Previsao, Usuario)
 from project.app.settings import settings
 
 Response = _TemplateResponse | RedirectResponse
@@ -32,7 +33,7 @@ async def by_id(request: Request, instituicao_id: int, user: Usuario=Depends(obt
         raise HTTPException(status_code=404, detail="Instituicao not found")
     return _instituicao
 
-@router.post("/", response_model=InstituicaoCompetente, tags=["Instituição"], summary=["Adiciona uma nova instituição"])
+@router.post("/", response_model=InstituicaoCompetenteCreate, tags=["Instituição"], summary=["Adiciona uma nova instituição"])
 async def create(*, user: Usuario=Depends(obter_usuario_logado), session: AsyncSession = Depends(get_session), instituicao: InstituicaoCompetente) -> Response:
     _instituicao = InstituicaoCompetente(
         name=instituicao.name,

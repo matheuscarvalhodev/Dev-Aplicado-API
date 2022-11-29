@@ -73,7 +73,7 @@ def create_app(
 
     tags_metadata = [
     {
-        "name": "Usuário",
+        "name": "Usuários",
         "description": "Rotas de usuários",
     },
     {
