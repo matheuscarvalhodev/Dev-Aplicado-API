@@ -17,7 +17,7 @@ Response = _TemplateResponse | RedirectResponse
 
 router = APIRouter(prefix="/auth")
 
-
+print("aaaa")
 
 @router.post('/signup',
              status_code=status.HTTP_201_CREATED,
